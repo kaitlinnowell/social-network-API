@@ -17,6 +17,7 @@ connection.once('open', async () => {
     await connection.dropCollection('users');
   }
 
+//Create each thought then create the user and associate the thought with the user
 for (let i in thoughts) {
     const thoughtData = await Thought.create(thoughts[i]);
     await User.create({...users[i], 
@@ -24,6 +25,7 @@ for (let i in thoughts) {
     });
 }
 
+//Add a friend for each user
 const allUsers = await User.find()
 for (const user of allUsers) {
     const newFriend = [allUsers[Math.floor(Math.random()*allUsers.length)]._id]

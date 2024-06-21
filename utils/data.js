@@ -19,6 +19,4 @@ const thoughts = [
     {thoughtText: 'Anyone want to go on a bike ride this weekend?', username: 'nquitero', reactions: [reactions[3]]},
 ]
 
-
-
 module.exports = {users, thoughts}

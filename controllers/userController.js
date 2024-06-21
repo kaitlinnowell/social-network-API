@@ -4,7 +4,8 @@ module.exports = {
   // Get all users
   async getUsers(req, res) {
     try {
-      const users = await User.find();
+      const users = await User.find()
+      .populate({path: 'thoughts', select: '-__v'});
       res.json(users);
     } catch (err) {
       res.status(500).json(err);
@@ -14,7 +15,7 @@ module.exports = {
   async getSingleUser(req, res) {
     try {
       const user = await User.findOne({ _id: req.params.userId })
-        .select('-__v');
+        .populate({path: 'thoughts', select: '-__v'});
 
       if (!user) {
         return res.status(404).json({ message: 'No user with that ID' });
@@ -34,7 +35,7 @@ module.exports = {
       res.status(500).json(err);
     }
   },
-  // Delete a user and associated apps
+  // Delete a user and associated thoughts
   async deleteUser(req, res) {
     try {
       const user = await User.findOneAndDelete({ _id: req.params.userId });
@@ -49,7 +50,7 @@ module.exports = {
       res.status(500).json(err);
     }
   },
-
+  // Update a user
 async updateUser(req, res) {
   try {
     const user = await User.findOneAndUpdate({ _id: req.params.userId }, {$set: req.body}, {new: true});
@@ -63,7 +64,7 @@ async updateUser(req, res) {
   }
 },
 
-
+// Add a friend by id
 async addFriend(req, res) {
   try {
     const user = await User.findOneAndUpdate(
@@ -82,6 +83,7 @@ async addFriend(req, res) {
   }
 },
 
+//Remove a friend by id
 async removeFriend(req, res) {
   try {
     const user = await User.findOneAndUpdate(
