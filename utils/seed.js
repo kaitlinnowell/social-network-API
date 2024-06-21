@@ -1,6 +1,6 @@
 const connection = require('../config/connection');
 const { User, Thought } = require('../models');
-const {usernames, thoughts} = require('./data');
+const {users, thoughts} = require('./data');
 
 connection.on('error', (err) => err);
 
@@ -17,15 +17,19 @@ connection.once('open', async () => {
     await connection.dropCollection('users');
   }
 
-  const thoughtData = await Thought.create(thoughts);
-  await User.create({...users, 
-    thoughts: [...thoughtData.map(({_id}) => _id)] //how do I make it a single thought.
-    //how do I add friends: user _ids?
-  });
+for (let i in thoughts) {
+    const thoughtData = await Thought.create(thoughts[i]);
+    await User.create({...users[i], 
+      thoughts: [thoughtData._id], 
+      //how do I add friends: user _ids?
+    });
+}
 
-  // loop through the saved applications, for each application we need to generate a application response and insert the application responses
-  console.table(users);
-  console.table(thoughts);
+const allUsers = await User.find()
+for (const user of allUsers) {
+    const newFriend = [allUsers[Math.floor(Math.random()*allUsers.length)]._id]
+    const updatedUser = await User.findOneAndUpdate({_id: user._id}, {$addToSet: {friends: newFriend}}, {new:true})
+}
   console.info('Seeding complete! 🌱');
   process.exit(0);
 });
