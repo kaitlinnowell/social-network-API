@@ -69,7 +69,7 @@ module.exports = {
   //remove a thought by the thought id. Also remove the thought from the list of thoughts for users.
   async deleteThought(req, res) {
     try {
-      const thought = await Thought.findOneAndRemove({ _id: req.params.thoughtId });
+      const thought = await Thought.findOneAndDelete({ _id: req.params.thoughtId });
 
       if (!thought) {
         return res.status(404).json({ message: 'No thought with this id!' });
@@ -89,7 +89,8 @@ module.exports = {
 
       res.json({ message: 'Thought successfully deleted!' });
     } catch (err) {
-      res.status(500).json(err);
+        console.log(err)
+        res.status(500).json(err);
     }
   },
 

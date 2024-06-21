@@ -20,8 +20,7 @@ connection.once('open', async () => {
 for (let i in thoughts) {
     const thoughtData = await Thought.create(thoughts[i]);
     await User.create({...users[i], 
-      thoughts: [thoughtData._id], 
-      //how do I add friends: user _ids?
+      thoughts: [thoughtData._id]
     });
 }
 
